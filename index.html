@@ -1467,7 +1467,7 @@ cv.addEventListener('touchstart',e=>{
     // Pinch start
     const dx=ts[0].clientX-ts[1].clientX,dy=ts[0].clientY-ts[1].clientY;
     lastPinchDist=Math.hypot(dx,dy);
-    lastPinchMid={(x:(ts[0].clientX+ts[1].clientX)/2,y:(ts[0].clientY+ts[1].clientY)/2)};
+    lastPinchMid={x:(ts[0].clientX+ts[1].clientX)/2,y:(ts[0].clientY+ts[1].clientY)/2};
     isPanning=true;panStart={sx:lastPinchMid.x,sy:lastPinchMid.y,px:panX,py:panY};
     return;
   }
@@ -1514,13 +1514,13 @@ cv.addEventListener('touchmove',e=>{
     // Pinch zoom
     const dx=ts[0].clientX-ts[1].clientX,dy=ts[0].clientY-ts[1].clientY;
     const dist=Math.hypot(dx,dy);
-    const mid={(x:(ts[0].clientX+ts[1].clientX)/2-rect.left,y:(ts[0].clientY+ts[1].clientY)/2-rect.top)};
+    const mid={x:(ts[0].clientX+ts[1].clientX)/2-rect.left,y:(ts[0].clientY+ts[1].clientY)/2-rect.top};
     if(lastPinchDist){
       zoomBy(dist/lastPinchDist,mid.x,mid.y);
       // Pan from mid movement
-      if(lastPinchMid){panX+=mid.x-lastPinchMid.x-rect.left;panY+=mid.y-lastPinchMid.y-rect.top;render();}
+      if(lastPinchMid){panX+=mid.x-lastPinchMid.x;panY+=mid.y-lastPinchMid.y;render();}
     }
-    lastPinchDist=dist;lastPinchMid={x:mid.x+rect.left,y:mid.y+rect.top};
+    lastPinchDist=dist;lastPinchMid={x:mid.x,y:mid.y};
     return;
   }
 
@@ -1548,7 +1548,7 @@ cv.addEventListener('touchmove',e=>{
   // Single-finger pan (only in select-like modes, not draw modes)
   if(_touchMoved&&(tool==='poly'||tool==='hole')){
     // Allow panning while in poly/hole mode if moved significantly
-    if(_touchStartPos&&!isDrawing){
+    if(_touchStartPos){
       panX+=sx-_touchStartPos.sx;panY+=sy-_touchStartPos.sy;
       _touchStartPos={sx,sy};render();
     }
@@ -1716,3 +1716,4 @@ setTimeout(()=>{
 </script>
 </body>
 </html>
+
